@@ -1,0 +1,10 @@
+ChainCoxswain backend on http://127.0.0.1:8790  (Ctrl+C 停止)
+ * Serving Flask app 'server'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8790
+ * Running on http://10.131.209.6:8790
+Press CTRL+C to quit
+127.0.0.1 - - [26/Oct/2026 15:42:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [26/Oct/2026 15:42:32] "POST /api/mcp HTTP/1.1" 200 -

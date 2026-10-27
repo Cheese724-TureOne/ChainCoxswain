@@ -1,0 +1,40 @@
+'use strict';
+const assert=require('node:assert/strict');
+const E=require('../engine.js');
+const start='2026-10-26';
+const {materials,orders}=E.demoData(start);
+const m=materials[0];
+let base=E.simulate(m,orders,{today:start,horizon:14});
+assert.equal(base.firstShortage,null);
+assert.equal(E.simulate(m,orders,{today:start,horizon:14,scenario:{type:'deliveryDelay',value:2}}).firstShortage,null);
+const delay3=E.simulate(m,orders,{today:start,horizon:14,scenario:{type:'deliveryDelay',value:3}});
+assert.equal(delay3.firstShortage,'2026-11-03');
+assert.equal(delay3.totalUnmet,10);
+let threshold=E.findThreshold(m,orders,{today:start,horizon:14,type:'deliveryDelay',maxValue:30});
+assert.equal(threshold.status,'found');
+assert.equal(threshold.threshold,3);
+assert(threshold.rounds>=3);
+const critical=E.baselineRisk(materials.find(m=>m.sku==='M-004'),orders,14,start);
+assert.equal(critical.level,'critical');
+assert.equal(critical.base.firstShortage,'2026-10-31');
+const scanned=E.autonomousScan(materials,orders,{today:start,horizon:14});
+// 新语义：缺货测试候选 = 缺货队列(M-004/M-006 critical, M-002 watch) + 覆盖最短的正常物料(M-001/M-005)；
+// 积压物料 M-003 不参与缺货压力测试 → 共 5 个
+assert.equal(scanned.tested.length,5);
+assert(scanned.totalRounds>15);
+assert(scanned.log.some(l=>l.type==='select'&&l.message.includes('测试顺序')));
+assert.equal(scanned.tested.find(t=>t.risk.material.sku==='M-001').thresholds.deliveryDelay.threshold,3);
+assert.equal(orders.find(o=>o.id==='PO-1001').arrival,'2026-11-01');
+// The original business data must remain immutable during all test runs.
+const outage=E.simulate(materials.find(m=>m.sku==='M-002'),orders,{today:start,horizon:14,scenario:{type:'supplierOutage',supplier:'科联半导体'}});
+assert(outage.totalUnmet>0);
+const mitigations=E.mitigate(materials.find(m=>m.sku==='M-002'),orders,{type:'supplierOutage',supplier:'科联半导体'},{today:start,horizon:14});
+const fallback=mitigations.find(x=>x.id==='alternative');
+assert.equal(fallback.dataRequired,true);
+assert.equal(fallback.improvement,0);
+assert(!mitigations.find(x=>x.id==='emergency'));
+const overdue=E.simulate({sku:'X',stock:0,usage:1,safety:0,leadTime:3,supplier:'S'},[{id:'PO',sku:'X',arrival:'2026-10-24',quantity:99,supplier:'S',status:'已下单'}],{today:start,horizon:2});
+assert.equal(overdue.totalUnmet,2);
+assert(overdue.points.every(p=>p.stock>=0));
+assert.equal(E.addDays('2026-12-31',1),'2027-01-01');
+console.log('PASS — inventory baseline / delay threshold / adaptive agent / outage constraints / dates');

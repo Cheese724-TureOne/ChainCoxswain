@@ -1,0 +1,7 @@
+mode: None
+rounds: None / None
+toolCalls: None / None
+constraints: None
+fragile: []
+thresholds: []
+error: None

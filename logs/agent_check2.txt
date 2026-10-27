@@ -1,0 +1,7 @@
+mode: 规则演示模式（未配置 API Key）
+rounds: 26 / 10
+toolCalls: 46 / 40
+constraints: {'budgetOk': True, 'roundsOk': True, 'timeoutOk': True, 'toolCallsOk': False}
+fragile: ['M-004', 'M-002', 'M-003']
+thresholds: [('M-004', 'deliveryDelay', 'already', 0), ('M-004', 'demandIncrease', 'already', 0), ('M-004', 'purchaseDelay', 'already', 0), ('M-002', 'deliveryDelay', 'found', 3), ('M-002', 'demandIncrease', 'found', 22), ('M-002', 'purchaseDelay', 'not-applicable', None), ('M-003', 'demandIncrease', 'not-found', None), ('M-003', 'deliveryDelay', 'not-applicable', None), ('M-003', 'purchaseDelay', 'not-applicable', None), ('M-001', 'deliveryDelay', 'found', 3), ('M-001', 'demandIncrease', 'found', 29), ('M-001', 'purchaseDelay', 'not-applicable', None), ('M-006', 'purchaseDelay', 'found', 4), ('M-006', 'demandIncrease', 'found', 26), ('M-006', 'deliveryDelay', 'not-applicable', None)]
+error: None

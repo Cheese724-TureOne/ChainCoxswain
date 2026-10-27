@@ -1,0 +1,5 @@
+service: ChainCoxswain | version: 2.0.0
+qwen mode: rule-demo | label: 规则演示模式（未配置 API Key）
+dataset: 演示数据（虚构物料） | materials: 6
+mcp tools: ['get_inventory_risk_list', 'query_material', 'run_autonomous_stress_test', 'query_risk_threshold', 'compare_interventions', 'get_agent_tool_logs', 'export_analysis_report']
+mcp bridge tools: 7

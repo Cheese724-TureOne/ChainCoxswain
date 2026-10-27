@@ -1,0 +1,32 @@
+.....F................                                                   [100%]
+================================== FAILURES ===================================
+_______________ test_no_purchase_data_threshold_not_applicable ________________
+
+a_zip_path = 'C:\\Users\\ZhuanZ（无密码）\\Desktop\\DDL们\\2026秋\\供应链比赛\\ChainCoxswain_Pro\\data\\A.zip'
+tmp_path = WindowsPath('C:/Users/ZhuanZ（无密码）/AppData/Local/Temp/pytest-of-ZhuanZ（无密码）/pytest-1/test_no_purchase_data_threshol0')
+
+    def test_no_purchase_data_threshold_not_applicable(a_zip_path, tmp_path):
+        """A.zip 无采购订单：延期类临界点必须 not-applicable（基线已缺货则为 already=0），不得编造。"""
+        import engine as E
+        s = ChainCoxswainService(data_dir=os.path.dirname(a_zip_path),
+                                 log_path=str(tmp_path / "tool_logs.json"))
+        meta = s.load_a_zip()
+        assert meta["dataKind"] == "real-historical"
+        assert s.orders == []
+        # 基线已缺货的物料：状态为 already（阈值 0），这是数据真实状态
+        sku0 = s.materials[0]["sku"]
+        r0 = s.tool_search_threshold(sku0, "deliveryDelay", horizon=14)
+        assert r0["status"] in ("already", "not-applicable")
+        if r0["status"] == "already":
+            assert r0["threshold"] == 0
+        # 找基线不缺货的物料：无采购数据 -> 延期类临界点必须 not-applicable
+        target = None
+        for m in s.materials:
+            risk = E.baseline_risk(m, s.orders, 14, s._today())
+>           if not risk["firstShortage"]:
+E           KeyError: 'firstShortage'
+
+tests\test_agent.py:175: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_agent.py::test_no_purchase_data_threshold_not_applicable - ...
+1 failed, 21 passed in 1.69s

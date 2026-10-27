@@ -1,0 +1,7 @@
+note: G1/G2 不产生临界点，其临界点误差不计入；误差仅在被测组真实找到临界点时与穷举基准比较。千问组在无 API Key 时为明确标记的规则演示模式。
+G1 传统静态风险预警 | calls: 1 | ms: 1 | det: 0.4 | thrErr: None
+G2 固定参数单次压力测试 | calls: 6 | ms: 1 | det: 0.6 | thrErr: None
+G3 规则驱动自适应压力测试 | calls: 57 | ms: 13 | det: 1.0 | thrErr: 0.0
+G4 千问 Agent 驱动多轮测试 | calls: 61 | ms: 29 | det: 0.8 | thrErr: 0.0
+groundTruth skus: ['M-001', 'M-002', 'M-003', 'M-004', 'M-005', 'M-006']
+fragile: ['M-001', 'M-002', 'M-004', 'M-005', 'M-006']

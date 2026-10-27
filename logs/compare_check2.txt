@@ -1,0 +1,4 @@
+G1 传统静态风险预警 | calls: 1 | ms: 2 | det: 0.4 | thrErr: None
+G2 固定参数单次压力测试 | calls: 6 | ms: 1 | det: 0.6 | thrErr: None
+G3 规则驱动自适应压力测试 | calls: 57 | ms: 16 | det: 1.0 | thrErr: 0.0
+G4 千问 Agent 驱动多轮测试 | calls: 82 | ms: 45 | det: 1.0 | thrErr: 0.0
